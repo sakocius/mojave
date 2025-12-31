@@ -1,0 +1,59 @@
+<p>pool-timetable works!</p>
+<div style="display: flex; flex-direction: column; gap: 0.5rem">
+  <div style="display: flex; gap: 0.5rem">
+    <label for="pool-type">Choose a pool type:</label>
+
+    <select name="pool-type"
+            id="pool-type"
+            [(ngModel)]="selectedPoolType">
+      @for (poolType of poolTypeOptions; track $index) {
+      <option [value]="poolType">{{poolType}}</option>
+      }
+
+    </select>
+  </div>
+  <div style="display: flex; gap: 0.5rem">
+    <label for="day-of-week">Choose a day:</label>
+
+    <select name="day-of-week"
+            id="day-of-week"
+            [(ngModel)]="selectedDay">
+      @for (day of dayOfWeekOptions; track $index) {
+      <option [value]="day">{{day}}</option>
+      }
+
+    </select>
+  </div>
+  <div style="display: flex; gap: 0.5rem">
+    <label for="time-range">Choose a time range:</label>
+
+    <select name="time-range"
+            id="time-range"
+            [(ngModel)]="selectedTimeRange">
+      @for (timeRange of timeRangeOptions; track $index) {
+      <option [value]="timeRange">{{timeRange}}</option>
+      }
+
+    </select>
+  </div>
+
+</div>
+
+<h2>{{selectedPoolType() === PoolType.HALF ? '25M' : '50M'}} on {{selectedDay()}}, {{selectedTimeRange()}}</h2>
+<ul class="ul-reset"
+    style="display: flex; width: 100%; overflow: auto;">
+  @for (timeRange of currentData(); track $index) {
+  <li>
+    <p style="white-space: nowrap; min-width: 120px;">{{ timeRange.time }}</p>
+    <ul class="ul-reset">
+      @for (lane of timeRange.lanes; track $index) {
+      <li class="lane-cell"
+          [class.is-available]="lane[1] === LaneState.PUBLIC"
+          [class.is-disabled]="lane[1] === LaneState.DISABLED">
+        <span>{{ lane[1] }}</span>
+      </li>
+      }
+    </ul>
+  </li>
+  }
+</ul>

@@ -1,4 +1,12 @@
 :host {
   display: block;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+::ng-deep {
+  .ul-reset {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
 }
