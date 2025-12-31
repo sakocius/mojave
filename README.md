@@ -58,7 +58,7 @@ mojave/
 │   │   └── app.html       # Root template
 │   ├── index.html         # Main HTML file
 │   ├── main.ts           # Application entry point
-│   └── styles.css        # Global styles
+│   └── styles.scss        # Global styles
 ├── angular.json          # Angular CLI configuration
 ├── package.json         # npm dependencies
 └── tsconfig.json       # TypeScript configuration
