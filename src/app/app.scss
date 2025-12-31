@@ -4,6 +4,9 @@
 }
 
 ::ng-deep {
+  * {
+    box-sizing: border-box;
+  }
   .ul-reset {
     list-style: none;
     padding: 0;

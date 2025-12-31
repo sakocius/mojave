@@ -25,3 +25,9 @@ export enum DayOfWeek {
   SATURDAY = 'saturday',
   SUNDAY = 'sunday',
 }
+
+export enum TimeRangeGroup {
+  BEFORE_LUNCH = '06:00-11:45',
+  AFTERNOON = '12:00-17:45',
+  EVENING = '18:00-22:00'
+}

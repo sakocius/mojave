@@ -1,5 +1,5 @@
 import { Component, computed, signal } from '@angular/core';
-import { DayOfWeek, LaneState, PoolType } from './lazdynu-baseinas.type';
+import { DayOfWeek, LaneState, PoolType, TimeRangeGroup } from './lazdynu-baseinas.type';
 import { TIMETABLE_DATA } from './lazdynu-baseinas-data.const';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -19,11 +19,11 @@ export class PoolTimetable {
 
   poolTypeOptions = Object.values(PoolType);
   dayOfWeekOptions = Object.values(DayOfWeek);
-  timeRangeOptions = ['06:00-11:45', '12:00-17:45', '18:00-22:00'];
+  timeRangeOptions = Object.values(TimeRangeGroup);
 
   selectedPoolType = signal(PoolType.HALF);
-  selectedDay = signal(DayOfWeek.MONDAY);
-  selectedTimeRange = signal('06:00-11:45');
+  selectedDay = signal(getCurrentDayOfWeek());
+  selectedTimeRange = signal(getCurrentTimeRange());
 
   currentData = computed(() => {
     const data = this.timetableData();
@@ -45,7 +45,9 @@ export const isWithinTimeRange = (selectedTimeRange: string, targetTimeRange: st
   const [selectedStartTime, selectedEndTime] = selectedTimeRange.split('-').map((t) => t.trim());
   const [targetStartTime, targetEndTime] = targetTimeRange.split('-').map((t) => t.trim());
 
-  return isAfterTime(targetStartTime, selectedStartTime) && isBeforeTime(targetEndTime, selectedEndTime);
+  return (
+    isAfterTime(targetStartTime, selectedStartTime) && isBeforeTime(targetEndTime, selectedEndTime)
+  );
 };
 
 export const isAfterTime = (currentTime: string, isAfterTime: string): boolean => {
@@ -69,4 +71,36 @@ export const isBeforeTime = (currentTime: string, isBeforeTime: string): boolean
     return true;
   }
   return false;
+};
+
+export const getCurrentSelection = () => {
+  return {
+    poolType: PoolType.HALF,
+    dayOfWeek: getCurrentDayOfWeek(),
+    timeRange: getCurrentTimeRange(),
+  }
+};
+
+export const getCurrentDayOfWeek = (): DayOfWeek => {
+  const now = new Date();
+  const currentDay = now.getDay(); // 0 (Sunday) to 6 (Saturday)
+  const dayOfWeekOptions = Object.values(DayOfWeek);
+  return dayOfWeekOptions[(currentDay + 6) % 7] ?? DayOfWeek.MONDAY; // Adjusting so that Monday is 0
+};
+
+export const getCurrentTimeRange = (): string => {
+  const now = new Date();
+  const currentHours = now.getHours();
+  const currentMinutes = now.getMinutes();
+
+  const match = Object.values(TimeRangeGroup).find((timeRange) => {
+    const currentTime = `${String(currentHours).padStart(2, '0')}:${String(currentMinutes).padStart(2, '0')}`;
+    const currentTimeRange = currentTime + '-' + currentTime;
+    return isWithinTimeRange(
+      timeRange,
+      currentTimeRange
+    );
+  });
+
+  return match ?? TimeRangeGroup.BEFORE_LUNCH; // Default time range
 };
