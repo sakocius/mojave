@@ -31,12 +31,26 @@ export class PoolTimetable {
     const day = this.selectedDay();
     const timeRange = this.selectedTimeRange();
 
-    const parsedData = Object.entries(data[poolType][day])
+    const halfPoolData = Object.entries(data[PoolType.HALF][day])
       .filter((time) => isWithinTimeRange(timeRange, time[0]))
       .map(([time, lanes]) => ({
         time: time,
         lanes: Object.entries(lanes),
       }));
+
+    const fullPoolData = Object.entries(data[PoolType.FULL][day])
+      .filter((time) => isWithinTimeRange(timeRange, time[0]))
+      .map(([time, lanes]) => ({
+        time: time,
+        lanes: Object.entries(lanes),
+      }));
+
+    const parsedData = {
+      [PoolType.HALF]: halfPoolData,
+      [PoolType.FULL]: fullPoolData,
+    };
+
+
     return parsedData;
   });
 }

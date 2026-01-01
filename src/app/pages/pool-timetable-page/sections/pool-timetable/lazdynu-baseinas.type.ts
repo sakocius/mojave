@@ -9,11 +9,13 @@ export enum LaneState {
   PENTATHLON = 'pentathlon',
   TRAINER = 'trainer',
   CLOSED = 'closed',
+  CHILDREN_GROUP = 'children_group',
+  SWIMMING_SCHOOL = 'swimming_school',
 }
 
 export enum PoolType {
   HALF = 'half',
-  // FULL = 'full',
+  FULL = 'full',
 }
 
 export enum DayOfWeek {

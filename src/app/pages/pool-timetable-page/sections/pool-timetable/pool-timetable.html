@@ -1,17 +1,5 @@
 <div style="display: flex; flex-direction: column; gap: 0.5rem; margin: 1rem 0;">
   <div style="display: flex; gap: 0.5rem">
-    <label for="pool-type">Choose a pool type:</label>
-
-    <select name="pool-type"
-            id="pool-type"
-            [(ngModel)]="selectedPoolType">
-      @for (poolType of poolTypeOptions; track $index) {
-      <option [value]="poolType">{{poolType}}</option>
-      }
-
-    </select>
-  </div>
-  <div style="display: flex; gap: 0.5rem">
     <label for="day-of-week">Choose a day:</label>
 
     <select name="day-of-week"
@@ -37,36 +25,39 @@
   </div>
 </div>
 
-<h2>{{selectedPoolType() === PoolType.HALF ? '25M' : '50M'}} on {{selectedDay()}}, {{selectedTimeRange()}}</h2>
+<h2>{{selectedDay()}}, {{selectedTimeRange()}}</h2>
+@for(poolData of [currentData()[PoolType.HALF], currentData()[PoolType.FULL]]; track $index; let dataIndex = $index) {
+<h2>{{dataIndex === 0 ? '25M' : '50M'}}</h2>
 <div style="width: 100%; overflow: auto;">
-<table class="timetable">
-  <thead>
-    <tr class="timetable__header-row">
-      <th class="timerange-cell"></th>
-      @for (timeRange of currentData(); track $index; let timeRangeIndex = $index) {
-      <th class="timerange-cell">{{timeRange.time}}</th>
-      }
-    </tr>
+  <table class="timetable">
+    <thead>
+      <tr class="timetable__header-row">
+        <th class="timerange-cell" style="width: 64px;"></th>
+        @for (timeRange of poolData; track $index; let timeRangeIndex = $index) {
+        <th class="timerange-cell">{{timeRange.time}}</th>
+        }
+      </tr>
 
-  </thead>
-  <tbody>
-    @for (laneZero of currentData()[0].lanes; track $index; let laneIndex = $index) {
-    <tr  class="timetable__body-row">
-      <td class="timerange-cell" style="text-align: center;">{{laneZero[0]}}</td>
-      @for (timeRange of currentData(); track $index) {
-      @if (timeRange.lanes[laneIndex]; as lane) {
+    </thead>
+    <tbody>
+      @for (laneZero of poolData[0].lanes; track $index; let laneIndex = $index) {
+      <tr class="timetable__body-row">
+        <td class="timerange-cell"
+            style="text-align: center;">{{laneZero[0]}}</td>
+        @for (timeRange of poolData; track $index) {
+        @if (timeRange.lanes[laneIndex]; as lane) {
 
-      <td class="lane-cell"
-          [class.is-available]="lane[1] === LaneState.PUBLIC"
-          [class.is-disabled]="lane[1] === LaneState.DISABLED">
-        <span>{{ lane[1] }}</span>
-      </td>
-      }
+        <td class="lane-cell"
+            [class.is-available]="lane[1] === LaneState.PUBLIC"
+            [class.is-disabled]="lane[1] === LaneState.DISABLED">
+          <span>{{ lane[1] }}</span>
+        </td>
+        }
 
+        }
+      </tr>
       }
-    </tr>
-    }
-  </tbody>
-</table>
+    </tbody>
+  </table>
 </div>
-
+}
