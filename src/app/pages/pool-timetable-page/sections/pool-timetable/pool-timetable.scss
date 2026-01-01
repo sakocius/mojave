@@ -1,5 +1,17 @@
+.timetable {
+  width: 100%;
+  overflow: auto;
+}
+
+.timerange-cell {
+  padding: 0.25rem 0.5rem;
+  text-align: left;
+  background-color: #eeeeee;
+  font-weight: bold;
+}
+
 .lane-cell {
-  padding: 8px;
+  padding: 0.25rem 0.5rem;
   text-align: left;
   background-color: #ef9a9a;
   &.is-available {

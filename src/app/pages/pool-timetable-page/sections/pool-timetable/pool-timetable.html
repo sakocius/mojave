@@ -38,20 +38,35 @@
 </div>
 
 <h2>{{selectedPoolType() === PoolType.HALF ? '25M' : '50M'}} on {{selectedDay()}}, {{selectedTimeRange()}}</h2>
-<ul class="ul-reset"
-    style="display: flex; width: 100%; overflow: auto;">
-  @for (timeRange of currentData(); track $index) {
-  <li>
-    <p style="white-space: nowrap; min-width: 120px;">{{ timeRange.time }}</p>
-    <ul class="ul-reset">
-      @for (lane of timeRange.lanes; track $index) {
-      <li class="lane-cell"
+<div style="width: 100%; overflow: auto;">
+<table class="timetable">
+  <thead>
+    <tr class="timetable__header-row">
+      <th class="timerange-cell"></th>
+      @for (timeRange of currentData(); track $index; let timeRangeIndex = $index) {
+      <th class="timerange-cell">{{timeRange.time}}</th>
+      }
+    </tr>
+
+  </thead>
+  <tbody>
+    @for (laneZero of currentData()[0].lanes; track $index; let laneIndex = $index) {
+    <tr  class="timetable__body-row">
+      <td class="timerange-cell" style="text-align: center;">{{laneZero[0]}}</td>
+      @for (timeRange of currentData(); track $index) {
+      @if (timeRange.lanes[laneIndex]; as lane) {
+
+      <td class="lane-cell"
           [class.is-available]="lane[1] === LaneState.PUBLIC"
           [class.is-disabled]="lane[1] === LaneState.DISABLED">
         <span>{{ lane[1] }}</span>
-      </li>
+      </td>
       }
-    </ul>
-  </li>
-  }
-</ul>
+
+      }
+    </tr>
+    }
+  </tbody>
+</table>
+</div>
+
